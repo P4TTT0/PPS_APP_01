@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <div class="title-container">
+      <ion-title class="title">¡Bienvenido!</ion-title>
+      <p class="sub-title">Inica sesión para acceder a tu cuenta</p>
+    </div>
+  
+    <div class="sign-up-container">
+      <img class="sign-up-icon" src="./../../../assets/sign_up.svg" alt="sign_up" />
+    </div>
+  
+    <form [formGroup]="regForm" novalidate>
+      <div class="ion-padding">
+        <ion-item class="login-field">
+          <ion-input type="text" placeholder="E-Mail" formControlName="email"></ion-input>
+          <ion-icon slot="end" name="person-outline"></ion-icon>
+        </ion-item>
+        <ion-item class="login-field">
+          <ion-input type="password" placeholder="Contraseña" formControlName="password"></ion-input>
+        </ion-item>
+      </div>
+      <div class="button-container">
+        <ion-button (click)="OnLoginClick()" expand="block" fill="clear" shape="round">
+          Iniciar sesión
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

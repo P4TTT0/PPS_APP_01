@@ -1,0 +1,75 @@
+
+.title-container
+{
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title
+{
+ font-size: 30px;
+ position: relative;
+ margin-top: 10px;
+}
+
+.sub-title
+{
+    color: #A3A3A3;
+}
+
+.ion-padding
+{
+    margin-top: 30px;
+}
+
+.login-field
+{
+    margin-bottom: 30px;
+}
+
+ion-item
+{
+    --background: #383636;
+    border-radius: 10px 10px 0px 10px;
+    border-bottom: solid 7px #1A1919;
+    
+}
+
+.sign-up-container
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.sign-up-icon
+{
+    margin-top: 40px;
+    width: 200px;
+}
+
+.button-container
+{
+    height: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+ion-button
+{
+    background-color: #A3A3A3;
+    border-radius: 10px 10px 0px 10px;
+    width: 200px;
+    color: #1A1919;
+}
+
+.container
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
