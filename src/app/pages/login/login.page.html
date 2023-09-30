@@ -2,7 +2,7 @@
   <div class="container">
     <div class="title-container">
       <ion-title class="title">¡Bienvenido!</ion-title>
-      <p class="sub-title">Inica sesión para acceder a tu cuenta</p>
+      <p class="sub-title">Inicia sesión para acceder a tu cuenta</p>
     </div>
   
     <div class="sign-up-container">
@@ -22,6 +22,17 @@
       <div class="button-container">
         <ion-button (click)="OnLoginClick()" expand="block" fill="clear" shape="round">
           Iniciar sesión
+        </ion-button>
+      </div>
+      <div class="buttons-container">
+        <ion-button (click)="OnFillFields('admin@admin.com', '111111')" expand="block" fill="clear" shape="round">
+          1 <ion-icon slot="end" name="person-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="OnFillFields('invitado@invitado.com', '222222')" expand="block" fill="clear" shape="round">
+          2 <ion-icon slot="end" name="person-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="OnFillFields('usuario@usuario.com', '333333')" expand="block" fill="clear" shape="round">
+          3 <ion-icon slot="end" name="person-outline"></ion-icon>
         </ion-button>
       </div>
     </form>

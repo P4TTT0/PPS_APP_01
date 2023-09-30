@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence
+} from "firebase/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +14,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 export class AutheticationService 
 {
-  constructor(public ngFireAuth : AngularFireAuth) { }
+  constructor(public ngFireAuth : AngularFireAuth) {}
 
   public async logIn(email : string, password : string)
   {
@@ -19,9 +26,18 @@ export class AutheticationService
     return await this.ngFireAuth.signOut();
   }
 
-  public async getProfile()
+  public async getUserUid()
   {
-    return await this.ngFireAuth.currentUser;
+    return new Promise<string | null>((resolve, reject) => 
+    {
+      this.ngFireAuth.authState.subscribe(user => {
+        if (user) {
+          resolve(user.uid);
+        } else {
+          resolve(null); 
+        }
+      });
+    });
   }
 
 }

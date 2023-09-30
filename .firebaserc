@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "proyecto-pps-1e5e8": {
+      "hosting": {
+        "app": [
+          "proyecto-pps-1e5e8"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "proyecto-pps-1e5e8"
+  }
+}

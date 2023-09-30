@@ -81,7 +81,6 @@ export class LoginPage implements OnInit
           {
             for (const key in control.errors) {
               errorMessage += messages.find(x => x.type === key)?.message + " ";
-
             }
           }
           this.showMessage(errorMessage);
@@ -107,5 +106,15 @@ export class LoginPage implements OnInit
     })
 
     await toast.present();
+  }
+  
+  public OnFillFields(emailQuickAccess : string, passwordQuickAccess : string)
+  {
+    this.regForm.setValue(
+      {
+        email: emailQuickAccess,
+        password: passwordQuickAccess
+      }
+    ) 
   }
 }

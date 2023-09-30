@@ -1,3 +1,7 @@
+ion-content
+{
+    --background: #191919;
+}
 
 .title-container
 {
@@ -26,7 +30,7 @@
 
 .login-field
 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 ion-item
@@ -47,7 +51,7 @@ ion-item
 .sign-up-icon
 {
     margin-top: 40px;
-    width: 200px;
+    width: 100px;
 }
 
 .button-container
@@ -55,15 +59,15 @@ ion-item
     height: 60px;
     display: flex;
     justify-content: center;
+    ion-button
+    {
+        background-color: #A3A3A3;
+        border-radius: 10px 10px 0px 10px;
+        width: 200px;
+        color: #1A1919;
+    }
 }
 
-ion-button
-{
-    background-color: #A3A3A3;
-    border-radius: 10px 10px 0px 10px;
-    width: 200px;
-    color: #1A1919;
-}
 
 .container
 {
@@ -72,4 +76,18 @@ ion-button
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.buttons-container
+{
+    margin: 40px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    ion-button
+    {
+        background-color: #A3A3A3;
+        border-radius: 30px;
+        color: #191919;
+    }
 }

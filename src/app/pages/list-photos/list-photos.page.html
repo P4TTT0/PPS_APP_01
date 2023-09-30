@@ -1,0 +1,37 @@
+<ion-content [fullscreen]="true">
+  <div class="nav-bar">
+    <img style="width: 40px;" src="./../../assets/Isotipo_White_NoBCK.svg" />
+    <div class="button-container">
+      <ion-button (click)="OnLogoutClick()" expand="block" fill="clear" shape="round">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  <div class="button-photo-container">
+    <ion-button (click)="OnTakePictureClick()" expand="block" fill="clear" shape="round">
+      <span>Subir foto</span>
+      <ion-icon name="camera-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <div class="container title-container">
+    <h1>Cosas lindas</h1>
+  </div>
+  <div class="container padding center" *ngFor="let image of images">
+    <div class="card padding">
+      <div class="container image-container">
+        <img class="image" [src]="'data:image/jpeg;base64,' + this.image['ImageBase64']">
+      </div>
+      <div class="container d-flex container-vote">
+        <span>@{{this.resolvedUserNames[image['UIDUser']]}}</span>
+        <div class="vote-container center">
+          <ion-button [class.selected]="imageVotes[image['ImageBase64']]?.dislike" style="margin-right: 20px;">
+            <img class="vote-button" (click)="dislikeImage(image)" src="./../../../assets/thumbs-down-outline.svg">
+          </ion-button>
+          <ion-button [class.selected]="imageVotes[image['ImageBase64']]?.like">
+            <img class="vote-button" (click)="likeImage(image)" src="./../../../assets/thumbs-up-outline.svg">
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
