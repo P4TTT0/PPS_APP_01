@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AutheticationService } from 'src/app/services/authetication.service';
-import { Route, Router } from '@angular/router';
+import { Route, Router, ActivatedRoute } from '@angular/router';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { CameraSource } from '@capacitor/camera/dist/esm/definitions';
 import { DataService } from 'src/app/services/data.service';
@@ -17,9 +17,11 @@ export class ListPhotosPage implements OnInit {
   public imageBase64 : string = "";
   public userName : any;
   resolvedUserNames: { [key: string]: string } = {};
-  imageVotes: { [key: string]: { like: boolean; dislike: boolean } } = {};
+  imageVotes: { [key: string]: { like: boolean } } = {};
+  selectedImage: string | null = null;
+  public isBeautyValue : any;
 
-  constructor(private auth : AutheticationService, private router : Router, public data : DataService) 
+  constructor(private auth : AutheticationService, private router : Router, public data : DataService, private route : ActivatedRoute) 
   { 
   }
 
@@ -30,7 +32,15 @@ export class ListPhotosPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngOnInit() 
+  {
+    console.log('hola');
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.isBeautyValue = navigation.extras.state['isBeautyValue'];
+      console.log(this.isBeautyValue);
+    }
+    this.getVotedImage();
     try {
       this.images = await this.data.getImages();
     } catch (error) {
@@ -71,23 +81,35 @@ export class ListPhotosPage implements OnInit {
     }
   }
 
-  // Función para registrar la selección de "me gusta"
-  likeImage(image: any) {
-    if (!this.imageVotes[image['ImageBase64']]) {
-      this.imageVotes[image['ImageBase64']] = { like: true, dislike: false };
-    } else {
-      this.imageVotes[image['ImageBase64']].like = !this.imageVotes[image['ImageBase64']].like;
-      this.imageVotes[image['ImageBase64']].dislike = false;
+  public async likeImage(image: any) 
+  {
+    // Verifica si ya existe una imagen seleccionada
+    if (this.selectedImage) 
+    {
+      // Desactiva el "me gusta" de la imagen anterior
+      this.imageVotes[this.selectedImage].like = false;
     }
+    // Marca la imagen actual como votada
+    this.selectedImage = image.ImageBase64;
+    // Activa el "me gusta" de la imagen actual
+    this.imageVotes[image.ImageBase64] = { like: true };  
+    
+    const UIDUser = await this.auth.getUserUid() || '';
+    const ImageId = await this.data.getImageIdByImageBase64Value(image.ImageBase64) || '';
+
+    await this.data.updateVotedBeautyImage(UIDUser, ImageId);
   }
 
-  // Función para registrar la selección de "No me gusta" para una imagen específica
-  dislikeImage(image: any) {
-    if (!this.imageVotes[image['ImageBase64']]) {
-      this.imageVotes[image['ImageBase64']] = { like: false, dislike: true };
-    } else {
-      this.imageVotes[image['ImageBase64']].like = false;
-      this.imageVotes[image['ImageBase64']].dislike = !this.imageVotes[image['ImageBase64']].dislike;
+  public async getVotedImage()
+  {
+    const UIDUser = await this.auth.getUserUid() || '';
+    const ImageId = await this.data.getUserVotedBeautyImageByUID(UIDUser);
+    const ImageBase64 = await this.data.getImageBase64ByImageId(ImageId);
+
+    if (ImageBase64) 
+    {
+      this.selectedImage = ImageBase64;
+      this.imageVotes[ImageBase64] = { like: true };
     }
   }
 

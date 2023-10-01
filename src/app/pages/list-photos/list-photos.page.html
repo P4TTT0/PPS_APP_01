@@ -24,9 +24,6 @@
       <div class="container d-flex container-vote">
         <span>@{{this.resolvedUserNames[image['UIDUser']]}}</span>
         <div class="vote-container center">
-          <ion-button [class.selected]="imageVotes[image['ImageBase64']]?.dislike" style="margin-right: 20px;">
-            <img class="vote-button" (click)="dislikeImage(image)" src="./../../../assets/thumbs-down-outline.svg">
-          </ion-button>
           <ion-button [class.selected]="imageVotes[image['ImageBase64']]?.like">
             <img class="vote-button" (click)="likeImage(image)" src="./../../../assets/thumbs-up-outline.svg">
           </ion-button>

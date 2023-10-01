@@ -51,5 +51,87 @@ export class DataService {
       return '';
     }
   }
+
+  public async getUserVotedBeautyImageByUID(UIDUser: string)
+  {
+    const userCollection = collection(this.firestore, 'user');
+    const userDoc = doc(userCollection, UIDUser);
+    const userDocSnapshot = await getDoc(userDoc);
+    if (userDocSnapshot.exists()) 
+    {
+      const userData = userDocSnapshot.data();
+      return userData['VotedBeautyImage'];
+    } 
+    else 
+    {
+      return '';
+    }
+  }
+
+  // Supongamos que tienes un método para buscar el documento por campo
+  public async getImageIdByImageBase64Value(Imagebase64Value: string) 
+  {
+    const userCollection = collection(this.firestore, 'image');
+    const querySnapshot = await getDocs(userCollection);
+  
+    let foundId = ''; 
+  
+    querySnapshot.forEach((doc) => 
+    {
+      const userData = doc.data();
+  
+      if (userData['ImageBase64'] == Imagebase64Value) {
+        foundId = doc.id; 
+      }
+
+    });
+  
+    return foundId; 
+  }
+
+  public async getImageBase64ByImageId(ImageId: string) 
+  {
+    const imageCollection = collection(this.firestore, 'image');
+    const imageDoc = doc(imageCollection, ImageId);
+  
+    try
+     {
+      const imageSnapshot = await getDoc(imageDoc);
+
+      if (imageSnapshot.exists()) 
+      {
+        const imageData = imageSnapshot.data();
+
+        if (imageData && imageData['ImageBase64']) 
+        {
+          return imageData['ImageBase64'];
+        }
+      }
+    } 
+    catch (error) 
+    {
+      return '';
+    }
+  }
+
+  public async updateVotedBeautyImage(UIDUser : string, ImageId : string)
+  {
+    const userCollection = collection(this.firestore, 'user');
+    const userDoc = doc(userCollection, UIDUser);
+    const userDocSnapshot = await getDoc(userDoc);
+    try 
+    {
+      updateDoc(userDoc, 
+      {
+        VotedBeautyImage: ImageId,
+      });
+      return true;
+    } 
+    catch (error) 
+    {
+      return false; 
+    }
+
+  }
 }
 

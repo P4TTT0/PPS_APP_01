@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
+import { AlwaysRefreshRouteReuseStrategy } from './classes/always-refresh-route-reuse-strategy'; // Asegúrate de importar la clase
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
-  },  {
+  },
+  {
     path: 'list-photos',
     loadChildren: () => import('./pages/list-photos/list-photos.module').then( m => m.ListPhotosPageModule)
   },
@@ -23,8 +25,11 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, onSameUrlNavigation: 'reload' })
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: AlwaysRefreshRouteReuseStrategy } 
+  ]
 })
 export class AppRoutingModule { }

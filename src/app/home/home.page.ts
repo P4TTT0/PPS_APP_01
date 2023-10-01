@@ -18,9 +18,16 @@ export class HomePage {
     });
   }
 
-  public OnViewPhotoClick()
+  public OnViewBeautyPhotoClick()
   {
-    this.router.navigate(['/list-photos'])
+    let isBeautyValue = true;
+    this.router.navigate(['/list-photos'], { state: { isBeautyValue } })
+  }
+
+  public OnViewUglyPhotoClick()
+  {
+    let isBeautyValue = false;
+    this.router.navigate(['/list-photos'], { state: { isBeautyValue } })
   }
 
 }
