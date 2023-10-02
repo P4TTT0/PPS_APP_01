@@ -19,7 +19,11 @@ const routes: Routes = [
   {
     path: 'list-photos',
     loadChildren: () => import('./pages/list-photos/list-photos.module').then( m => m.ListPhotosPageModule)
+  },  {
+    path: 'list-ugly-photos',
+    loadChildren: () => import('./pages/list-ugly-photos/list-ugly-photos.module').then( m => m.ListUglyPhotosPageModule)
   },
+
 
 ];
 

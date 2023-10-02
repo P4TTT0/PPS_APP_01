@@ -1,21 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AutheticationService } from 'src/app/services/authetication.service';
 import { Route, Router, ActivatedRoute } from '@angular/router';
-import { Camera, CameraResultType} from '@capacitor/camera';
+import { Camera, CameraResultType } from '@capacitor/camera';
 import { CameraSource } from '@capacitor/camera/dist/esm/definitions';
 import { DataService } from 'src/app/services/data.service';
-import { Query } from '@angular/fire/firestore';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-
 
 @Component({
-  selector: 'app-list-photos',
-  templateUrl: './list-photos.page.html',
-  styleUrls: ['./list-photos.page.scss'],
+  selector: 'app-list-ugly-photos',
+  templateUrl: './list-ugly-photos.page.html',
+  styleUrls: ['./list-ugly-photos.page.scss'],
 })
-export class ListPhotosPage implements OnInit {
-  [x: string]: any;
+export class ListUglyPhotosPage implements OnInit {
 
   public images : any;
   public imageBase64 : string = "";
@@ -45,8 +40,7 @@ export class ListPhotosPage implements OnInit {
     }
     this.getVotedImage();
     try {
-      this.images = await this.data.getFilteredImage(true);
-      console.log(this.images);
+      this.images = await this.data.getFilteredImage(false);
     } catch (error) {
       console.error(error);
     }
@@ -58,13 +52,13 @@ export class ListPhotosPage implements OnInit {
       quality: 90,
       allowEditing: false,
       resultType: CameraResultType.Base64,
-      source: CameraSource.Camera
+      source: CameraSource.Photos
     });
 
     this.imageBase64 = image.base64String || '';
     let userUid = await this.auth.getUserUid() || '';
-    this.data.saveImage(true, this.imageBase64, userUid, new Date().toISOString().slice(0, 10));
-    this.images = await this.data.getImages();
+    this.data.saveImage(false, this.imageBase64, userUid, new Date().toISOString().slice(0, 10));
+    this.images = await this.data.getFilteredImage(false);
     this.resolveUserNames();
   }
 
@@ -77,8 +71,8 @@ export class ListPhotosPage implements OnInit {
     photos.photos.forEach(async photo => {
       let image = await this.blobToBase64(photo.webPath || '');
       let userUid = await this.auth.getUserUid() || '';
-      this.data.saveImage(true, image, userUid, new Date().toISOString().slice(0, 10));
-      this.images = await this.data.getFilteredImage(true);
+      this.data.saveImage(false, image, userUid, new Date().toISOString().slice(0, 10));
+      this.images = await this.data.getFilteredImage(false);
       this.resolveUserNames();
     });
   }
@@ -137,13 +131,13 @@ export class ListPhotosPage implements OnInit {
     const UIDUser = await this.auth.getUserUid() || '';
     const ImageId = await this.data.getImageIdByImageBase64Value(image.ImageBase64) || '';
 
-    await this.data.updateVotedBeautyImage(UIDUser, ImageId);
+    await this.data.updateVotedUglyImage(UIDUser, ImageId);
   }
 
   public async getVotedImage()
   {
     const UIDUser = await this.auth.getUserUid() || '';
-    const ImageId = await this.data.getUserVotedBeautyImageByUID(UIDUser);
+    const ImageId = await this.data.getUserUglyBeautyImageByUID(UIDUser);
     const ImageBase64 = await this.data.getImageBase64ByImageId(ImageId);
 
     if (ImageBase64) 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, Firestore, getDoc, getDocs, updateDoc, collectionData, doc } from
+import { addDoc, collection, Firestore, getDoc, getDocs, updateDoc, collectionData, doc, query, where, orderBy } from
 '@angular/fire/firestore';
 
 
@@ -18,13 +18,22 @@ export class DataService {
     return images;
   }
 
-  public async saveImage(Beauty : boolean, ImageBase64 : string, UIDUser : string) {
+  public async getFilteredImage(beauty : boolean) {
+    const imageCollection = collection(this.firestore, 'image');
+    const q = query(imageCollection, where('Beauty', '==', beauty), orderBy('UploadDate', 'desc'));
+    const querySnapshot = await getDocs(q);
+    const images = querySnapshot.docs.map((doc) => doc.data());
+    return images;
+  }
+
+  public async saveImage(Beauty : boolean, ImageBase64 : string, UIDUser : string, UploadDate : string) {
     const imageCollection = collection(this.firestore, 'image');
 
     await addDoc(imageCollection, {
       Beauty,
       ImageBase64,
       UIDUser,
+      UploadDate,
     });
   }
 
@@ -61,6 +70,22 @@ export class DataService {
     {
       const userData = userDocSnapshot.data();
       return userData['VotedBeautyImage'];
+    } 
+    else 
+    {
+      return '';
+    }
+  }
+
+  public async getUserUglyBeautyImageByUID(UIDUser: string)
+  {
+    const userCollection = collection(this.firestore, 'user');
+    const userDoc = doc(userCollection, UIDUser);
+    const userDocSnapshot = await getDoc(userDoc);
+    if (userDocSnapshot.exists()) 
+    {
+      const userData = userDocSnapshot.data();
+      return userData['VotedUglyImage'];
     } 
     else 
     {
@@ -124,6 +149,26 @@ export class DataService {
       updateDoc(userDoc, 
       {
         VotedBeautyImage: ImageId,
+      });
+      return true;
+    } 
+    catch (error) 
+    {
+      return false; 
+    }
+
+  }
+
+  public async updateVotedUglyImage(UIDUser : string, ImageId : string)
+  {
+    const userCollection = collection(this.firestore, 'user');
+    const userDoc = doc(userCollection, UIDUser);
+    const userDocSnapshot = await getDoc(userDoc);
+    try 
+    {
+      updateDoc(userDoc, 
+      {
+        VotedUglyImage: ImageId,
       });
       return true;
     } 

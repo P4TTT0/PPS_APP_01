@@ -7,7 +7,7 @@ import { Route, Router } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage{
 
   constructor(private auth : AutheticationService, private router : Router) {}
 
@@ -27,7 +27,7 @@ export class HomePage {
   public OnViewUglyPhotoClick()
   {
     let isBeautyValue = false;
-    this.router.navigate(['/list-photos'], { state: { isBeautyValue } })
+    this.router.navigate(['/list-ugly-photos'], { state: { isBeautyValue } })
   }
 
 }
