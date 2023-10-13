@@ -2,10 +2,15 @@ import { Injectable } from '@angular/core';
 import { addDoc, collection, Firestore, getDoc, getDocs, updateDoc, collectionData, doc, query, where, orderBy } from
 '@angular/fire/firestore';
 
+interface Image {
+  Votes: number;
+  Beauty: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
 
   constructor(private firestore : Firestore) { }
@@ -18,6 +23,55 @@ export class DataService {
     return images;
   }
 
+  public async getImagesToChart() 
+  {
+    let dataSource : { value: number; name: string }[] = [];
+    const imageCollection = collection(this.firestore, 'image');
+    const q = query(imageCollection, where('Beauty', '==', true));
+    const querySnapshot = await getDocs(q);
+  
+    querySnapshot.forEach((doc) => 
+    {
+      const userData = doc.data();
+
+      let data = { value: userData['Votes'], name: userData['UploadDate']}
+      dataSource.push(data);
+    });
+  
+    return dataSource;
+  }
+
+  public async getImagesToBarChart() 
+  {
+    let dataSource : any[] = [];
+    const imageCollection = collection(this.firestore, 'image');
+    const q = query(imageCollection, where('Beauty', '==', false));
+    const querySnapshot = await getDocs(q);
+  
+    querySnapshot.forEach((doc) => 
+    {
+      const userData = doc.data();
+      dataSource.push(userData['Votes']);
+    });
+  
+    return dataSource;
+  }
+  public async getImagesToBarChartCategory() 
+  {
+    let dataSource : any[] = [];
+    const imageCollection = collection(this.firestore, 'image');
+    const q = query(imageCollection, where('Beauty', '==', false));
+    const querySnapshot = await getDocs(q);
+  
+    querySnapshot.forEach((doc) => 
+    {
+      const userData = doc.data();
+      dataSource.push(userData['UploadDate']);
+    });
+  
+    return dataSource;
+  }
+
   public async getFilteredImage(beauty : boolean) {
     const imageCollection = collection(this.firestore, 'image');
     const q = query(imageCollection, where('Beauty', '==', beauty), orderBy('UploadDate', 'desc'));
@@ -28,12 +82,14 @@ export class DataService {
 
   public async saveImage(Beauty : boolean, ImageBase64 : string, UIDUser : string, UploadDate : string) {
     const imageCollection = collection(this.firestore, 'image');
+    let Votes : number = 0;
 
     await addDoc(imageCollection, {
       Beauty,
       ImageBase64,
       UIDUser,
       UploadDate,
+      Votes,
     });
   }
 
@@ -93,7 +149,6 @@ export class DataService {
     }
   }
 
-  // Supongamos que tienes un método para buscar el documento por campo
   public async getImageIdByImageBase64Value(Imagebase64Value: string) 
   {
     const userCollection = collection(this.firestore, 'image');
@@ -120,7 +175,7 @@ export class DataService {
     const imageDoc = doc(imageCollection, ImageId);
   
     try
-     {
+    {
       const imageSnapshot = await getDoc(imageDoc);
 
       if (imageSnapshot.exists()) 
@@ -136,6 +191,32 @@ export class DataService {
     catch (error) 
     {
       return '';
+    }
+
+  }
+
+  public async updateVotesImges(ImageId : string, vote : number)
+  {
+    const imageCollection = collection(this.firestore, 'image');
+    const imageDoc = doc(imageCollection, ImageId);
+    const imageDocSnapshot = await getDoc(imageDoc);
+    try 
+    {
+      if(imageDocSnapshot.exists())
+      {
+        const imageData = imageDocSnapshot.data();
+        const actualVotes = imageData['Votes'];
+        updateDoc(imageDoc, 
+        {
+          Votes: actualVotes + vote,
+        });
+        return true;
+      }
+      return false;
+    } 
+    catch (error) 
+    {
+      return false; 
     }
   }
 

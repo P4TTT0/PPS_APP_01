@@ -1,0 +1,33 @@
+
+<ion-content [fullscreen]="true">
+  <div class="nav-bar">
+    <img style="width: 40px;" src="./../../assets/Isotipo_White_NoBCK.svg" />
+    <div class="button-container">
+      <span style="margin-right: 10px;">@{{this.nameUser}}</span>
+      <ion-button (click)="OnChartClick()" expand="block" fill="clear" shape="round">
+        <ion-icon name="bar-chart-outline"></ion-icon>
+      </ion-button>
+      <ion-button style="color: #ff3c3c;" (click)="OnLogoutClick()" expand="block" fill="clear" shape="round">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  <div class="containerr">
+    <h1>Votos cosas lindas</h1>
+    <ion-button (click)="OnRefreshPieChart()" expand="block" fill="clear" shape="round">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <div style="margin-top: -40px;" class="charts">
+    <div id="main" style="width: 20rem; height: 20rem;"></div>
+  </div>
+  <div style="margin-top: -40px;" class="containerr">
+    <h1>Votos cosas feas</h1>
+    <ion-button  (click)="OnRefreshBarChartClick()" expand="block" fill="clear" shape="round">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <div style="margin-top: -40px;" class="charts">
+    <div id="bar" style="width: 20rem; height: 20rem;"></div>
+  </div>
+</ion-content>

@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'list-ugly-photos',
     loadChildren: () => import('./pages/list-ugly-photos/list-ugly-photos.module').then( m => m.ListUglyPhotosPageModule)
   },
+  {
+    path: 'charts',
+    loadChildren: () => import('./pages/charts/charts.module').then( m => m.ChartsPageModule)
+  },
 
 
 ];

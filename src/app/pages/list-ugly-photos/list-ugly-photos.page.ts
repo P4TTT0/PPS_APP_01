@@ -19,6 +19,7 @@ export class ListUglyPhotosPage implements OnInit {
   imageVotes: { [key: string]: { like: boolean } } = {};
   selectedImage: string | null = null;
   public isBeautyValue : any;
+  public nameUser : string = "";
 
   constructor(private auth : AutheticationService, private router : Router, public data : DataService, private route : ActivatedRoute) 
   { 
@@ -31,8 +32,15 @@ export class ListUglyPhotosPage implements OnInit {
     });
   }
 
+  public OnChartClick()
+  {
+    this.router.navigate(['/charts']);
+  }
+
   async ngOnInit() 
   {
+    let userUID = await this.auth.getUserUid() || '';
+    this.nameUser = await this.data.getUserNameByUID(userUID);
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
       this.isBeautyValue = navigation.extras.state['isBeautyValue'];
@@ -122,6 +130,8 @@ export class ListUglyPhotosPage implements OnInit {
     {
       // Desactiva el "me gusta" de la imagen anterior
       this.imageVotes[this.selectedImage].like = false;
+      const OldImageId = await this.data.getImageIdByImageBase64Value(this.selectedImage) || '';
+      await this.data.updateVotesImges(OldImageId, -1);
     }
     // Marca la imagen actual como votada
     this.selectedImage = image.ImageBase64;
@@ -131,6 +141,7 @@ export class ListUglyPhotosPage implements OnInit {
     const UIDUser = await this.auth.getUserUid() || '';
     const ImageId = await this.data.getImageIdByImageBase64Value(image.ImageBase64) || '';
 
+    await this.data.updateVotesImges(ImageId, 1);
     await this.data.updateVotedUglyImage(UIDUser, ImageId);
   }
 

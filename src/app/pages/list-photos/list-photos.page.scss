@@ -5,6 +5,13 @@ ion-content
   padding: 0;
 }
 
+h1{
+  color: #ffffff;
+}
+span{
+  color: #ffffff;
+}
+
 .nav-bar
 {
   width: 100%;
@@ -16,9 +23,11 @@ ion-content
 
 .button-container
 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   ion-button
   {
-    color: #ff3c3c;
     height: 60px;
     background-color: #0c0c0c;
     border-radius: 15px;

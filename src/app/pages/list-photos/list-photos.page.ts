@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AutheticationService } from 'src/app/services/authetication.service';
 import { Route, Router, ActivatedRoute } from '@angular/router';
 import { Camera, CameraResultType} from '@capacitor/camera';
@@ -24,6 +24,7 @@ export class ListPhotosPage implements OnInit {
   imageVotes: { [key: string]: { like: boolean } } = {};
   selectedImage: string | null = null;
   public isBeautyValue : any;
+  public nameUser : string = "";
 
   constructor(private auth : AutheticationService, private router : Router, public data : DataService, private route : ActivatedRoute) 
   { 
@@ -36,13 +37,15 @@ export class ListPhotosPage implements OnInit {
     });
   }
 
+  public OnChartClick()
+  {
+    this.router.navigate(['/charts']);
+  }
+
   async ngOnInit() 
   {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.isBeautyValue = navigation.extras.state['isBeautyValue'];
-      console.log(this.isBeautyValue);
-    }
+    let userUID = await this.auth.getUserUid() || '';
+    this.nameUser = await this.data.getUserNameByUID(userUID);
     this.getVotedImage();
     try {
       this.images = await this.data.getFilteredImage(true);
@@ -64,7 +67,7 @@ export class ListPhotosPage implements OnInit {
     this.imageBase64 = image.base64String || '';
     let userUid = await this.auth.getUserUid() || '';
     this.data.saveImage(true, this.imageBase64, userUid, new Date().toISOString().slice(0, 10));
-    this.images = await this.data.getImages();
+    this.images = await this.data.getFilteredImage(true);
     this.resolveUserNames();
   }
 
@@ -128,6 +131,8 @@ export class ListPhotosPage implements OnInit {
     {
       // Desactiva el "me gusta" de la imagen anterior
       this.imageVotes[this.selectedImage].like = false;
+      const OldImageId = await this.data.getImageIdByImageBase64Value(this.selectedImage || '') || '';
+      await this.data.updateVotesImges(OldImageId, -1);
     }
     // Marca la imagen actual como votada
     this.selectedImage = image.ImageBase64;
@@ -137,6 +142,7 @@ export class ListPhotosPage implements OnInit {
     const UIDUser = await this.auth.getUserUid() || '';
     const ImageId = await this.data.getImageIdByImageBase64Value(image.ImageBase64) || '';
 
+    await this.data.updateVotesImges(ImageId, 1);
     await this.data.updateVotedBeautyImage(UIDUser, ImageId);
   }
 
@@ -144,12 +150,15 @@ export class ListPhotosPage implements OnInit {
   {
     const UIDUser = await this.auth.getUserUid() || '';
     const ImageId = await this.data.getUserVotedBeautyImageByUID(UIDUser);
-    const ImageBase64 = await this.data.getImageBase64ByImageId(ImageId);
-
-    if (ImageBase64) 
+    if(ImageId)
     {
-      this.selectedImage = ImageBase64;
-      this.imageVotes[ImageBase64] = { like: true };
+      const ImageBase64 = await this.data.getImageBase64ByImageId(ImageId);
+  
+      if (ImageBase64) 
+      {
+        this.selectedImage = ImageBase64;
+        this.imageVotes[ImageBase64] = { like: true };
+      }
     }
   }
 
